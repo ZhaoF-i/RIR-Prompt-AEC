@@ -2,8 +2,26 @@ import torch.nn as nn
 import torch.fft
 import torch
 from einops import rearrange
-from nnstruct.rir_encoder import *
 
+
+class RIR_encoder(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.ln1 = nn.LayerNorm(50)
+        self.ln2 = nn.LayerNorm(160)
+        self.gelu = nn.GELU()
+        self.rir_linear1 = nn.Linear(50, 50)
+        self.rir_linear2 = nn.Linear(160, 160)
+        self.linear_3 = nn.Linear(50, 1)
+    def forward(self, input):
+        # b,c,f,t
+        x = input + self.gelu(self.rir_linear1(input))
+        x = x.permute(0,1,3,2)
+        x = x + self.gelu(self.rir_linear2(x))
+        x = x.permute(0, 1, 3, 2)
+        x = self.linear_3(x)
+
+        return x
 
 class CFB(nn.Module):
     def __init__(self, in_channels=None, out_channels=None):
