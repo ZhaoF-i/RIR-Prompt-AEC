@@ -188,12 +188,6 @@ def complexity():
     from ptflops import get_model_complexity_info
     mac, param = get_model_complexity_info(model, (2, 16000), as_strings=True, print_per_layer_stat=True, verbose=True)
     print(mac, param)
-    '''
-    1.93 GMac 463.46 k  ICCRN
-    1.94 GMac 469.1 k  rir_prompt/tgt_rir_as_prompt/iccrn
-    1.94 GMac 495.84 k v2
-    2.05 GMac 499.44 k rir_prompt_channel-cat
-    '''
 
 
 if __name__ == '__main__':
