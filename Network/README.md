@@ -1,1 +1,1 @@
-*-A, *-B, *-C, and *-D-\* represent the four fusion methods in the paper, where *-D-SE represents the noise reduction module, *-D-AEC represents the acoustic echo cancellation module, and ICCRN and MTFAA use the same noise reduction module in fusion method D.
+*-A, *-B, *-C, and *-D_\* represent the four fusion methods in the paper, where *-D_SE represents the noise reduction module, *-D_AEC represents the acoustic echo cancellation module, and ICCRN and MTFAA use the same noise reduction module in fusion method D.
