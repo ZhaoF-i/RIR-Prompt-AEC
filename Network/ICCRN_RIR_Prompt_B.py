@@ -140,10 +140,6 @@ class NET(nn.Module):
 
         d0 = self.out_ch_lstm(torch.cat([e0, d1], dim=1))
         out = self.out_conv(torch.cat([d0, d1], dim=1))
-        # b, c, f, t = Y.shape
-        # estEchoPath = Y.reshape(Y.shape[0], 2, self.order, Y.shape[2], Y.shape[3])
-        # out = mix_comp - multiply_orders_(far_comp, estEchoPath, self.order)
-
         y = self.istft(out[...,1:], t=x.shape[-1])[:, 0]
         # far = self.istft(far_comp, t=x.shape[-1])[:, 0]
 
@@ -194,11 +190,7 @@ def complexity():
     from ptflops import get_model_complexity_info
     mac, param = get_model_complexity_info(model, (2, 16000), as_strings=True, print_per_layer_stat=True, verbose=True)
     print(mac, param)
-    '''
-    1.93 GMac 463.46 k  ICCRN
-    1.94 GMac 469.1 k  rir_prompt/tgt_rir_as_prompt/iccrn
-    1.95 GMac 464.64 k  v5 rirNorm oneFrame
-    '''
+
 
 
 if __name__ == '__main__':
