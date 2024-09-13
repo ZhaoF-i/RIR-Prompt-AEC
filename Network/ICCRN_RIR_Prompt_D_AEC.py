@@ -111,23 +111,8 @@ class NET(nn.Module):
         return y
 
     def forward(self, x):
-    # def forward(self, x):
-        # x:[batch, channel, frequency, time]
-        # rir = torch.zeros(x.shape[0], 8000).to(x.device)
-        # comp_rir = self.stft(rir.unsqueeze(dim=1))[:,:,:,:20].unsqueeze(dim=-2)
-        # comp_rir_channel_cat = rearrange(comp_rir, 'b c f t -> b (c t) f 1')
-        # rir_embedding = self.rir_encoder.farward(comp_rir)
 
         X0 = self.stft(x)
-        # mix_comp = torch.stack([X0[:, 0], X0[:, 2]], dim=1)
-        # far_comp = torch.stack([X0[:, 1], X0[:, 3]], dim=1)
-        #
-        # far_complex_padded = torch.nn.functional.pad(far_comp, (20 - 1, 0))
-        # # 执行 unfold 操作，设置 size 参数为 (F, 4)，即 T+3 维度展开为大小为 4 的窗口
-        # far_complex_unfolded = far_complex_padded.unfold(3, 20, 1)
-        # echo_promopt = torch.sum(far_complex_unfolded * comp_rir, dim=-1)
-        #
-        # X0 = torch.cat([mix_comp, far_comp, echo_promopt], dim=1)
 
         e0 = self.in_ch_lstm(X0)
         e0 = self.in_conv(torch.cat([e0, X0], 1))
@@ -147,12 +132,8 @@ class NET(nn.Module):
 
         d0 = self.out_ch_lstm(torch.cat([e0, d1], dim=1))
         out = self.out_conv(torch.cat([d0, d1], dim=1))
-        # b, c, f, t = Y.shape
-        # estEchoPath = Y.reshape(Y.shape[0], 2, self.order, Y.shape[2], Y.shape[3])
-        # out = mix_comp - multiply_orders_(far_comp, estEchoPath, self.order)
 
         y = self.istft(out, t=x.shape[-1])[:, 0]
-        # echo = self.istft(echo_promopt, t=x.shape[-1])[:, 0]
 
 
         return y #, echo
@@ -202,13 +183,7 @@ def complexity():
     from ptflops import get_model_complexity_info
     mac, param = get_model_complexity_info(model, (3, 16000), as_strings=True, print_per_layer_stat=True, verbose=True)
     print(mac, param)
-    '''
-    1.93 GMac 463.46 k  ICCRN
-    1.94 GMac 469.1 k  rir_prompt/tgt_rir_as_prompt/iccrn
-    1.94 GMac 495.84 k v2
-    2.05 GMac 499.44 k rir_prompt_channel-cat
-    1.94 GMac 492.6 k ICCRN_se-rir-prompt-20_conv-far-inFreq
-    '''
+
 
 
 if __name__ == '__main__':
