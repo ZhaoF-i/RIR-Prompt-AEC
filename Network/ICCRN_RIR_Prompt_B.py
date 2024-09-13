@@ -2,7 +2,6 @@ import torch.nn as nn
 import torch.fft
 import torch
 from einops import rearrange
-from nnstruct.multiply_orders import *
 
 
 class CFB(nn.Module):
