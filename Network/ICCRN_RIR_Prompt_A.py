@@ -140,12 +140,8 @@ class NET(nn.Module):
 
         d0 = self.out_ch_lstm(torch.cat([e0, d1], dim=1))
         out = self.out_conv(torch.cat([d0, d1], dim=1))
-        # b, c, f, t = Y.shape
-        # estEchoPath = Y.reshape(Y.shape[0], 2, self.order, Y.shape[2], Y.shape[3])
-        # out = mix_comp - multiply_orders_(far_comp, estEchoPath, self.order)
 
         y = self.istft(out, t=x.shape[-1])[:, 0]
-        # far = self.istft(far_comp, t=x.shape[-1])[:, 0]
 
         return y
 
