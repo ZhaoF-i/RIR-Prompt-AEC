@@ -3,26 +3,18 @@ import torch
 # from Network.ICCRN_RIR_Prompt_D_AEC import NET as AEC
 ## MTFAA
 from Network.mtfaa_origen import MTFAANet as AEC
-from Network.ICCRN_1layer import NET as SE
+from Network.ICCRN_RIR_Prompt_D_SE import NET as SE
 import soundfile as sf
 
-# SE_model = '/ddnstor/imu_zhaofei/result/rir_prompt/ICCRN_1layer_estCleanRIR_mask/checkpoints/best.ckpt'
-SE_model_save = '/ddnstor/imu_zhaofei/result/rir_prompt/ICCRN_1layer_estCleanRIR_mask/checkpoints/SE.ckpt'
+SE_model = 'SE.ckpt'
 SE_NET = SE()
-# SE_NET.load_state_dict(torch.load(SE_model).state_dict)
-# torch.save(SE_NET.state_dict(), SE_model_save)
+SE_NET.load_state_dict(torch.load(SE_model))
 
-AEC_model = '/ddnstor/imu_zhaofei/result/rir_prompt/ReDesignDataSet/MTFAA_se-rir-prompt-20_conv-far-inTime_withMaskModel/checkpoints/best.ckpt'
-AEC_model_save = '/ddnstor/imu_zhaofei/result/rir_prompt/ReDesignDataSet/MTFAA_se-rir-prompt-20_conv-far-inTime_withMaskModel/checkpoints/MTFAA_AEC.ckpt'
+AEC_model = 'AEC.ckpt'
 ## ICCRN
 #AEC_NET = AEC()
-# MTFAA
+## MTFAA
 AEC_NET = AEC(n_sig=3)
-AEC_NET.load_state_dict(torch.load(AEC_model).state_dict)
-torch.save(AEC_NET.state_dict(), AEC_model_save)
-
-
-SE_NET.load_state_dict(torch.load(SE_model_save))
 AEC_NET.load_state_dict(torch.load(AEC_model_save))
 
 mic, _ = sf.read('')
