@@ -2,8 +2,6 @@ import torch.nn as nn
 import torch.fft
 import torch
 from einops import rearrange
-from nnstruct.multiply_orders import *
-from nnstruct.rir_encoder import *
 
 
 class CFB(nn.Module):
@@ -88,7 +86,6 @@ class NET(nn.Module):
         self.out_conv = nn.Conv2d(in_channels=channels * 3, out_channels=2, kernel_size=(1, 1), padding=(0, 0),
                                   bias=True)
 
-        self.rir_encoder = RIR_encoder()
 
     def stft(self, x):
         b, m, t = x.shape[0], x.shape[1], x.shape[2],
@@ -116,7 +113,6 @@ class NET(nn.Module):
         # rir = torch.zeros(x.shape[0], 8000).to(x.device)
         comp_rir = self.stft(rir.unsqueeze(dim=1))[:,:,:,:20]
         comp_rir_channel_cat = rearrange(comp_rir, 'b c f t -> b (c t) f 1')
-        # rir_embedding = self.rir_encoder.farward(comp_rir)
 
         X0 = self.stft(x)
         # mix_comp = torch.stack([X0[:, 0], X0[:, 2]], dim=1)
@@ -142,10 +138,6 @@ class NET(nn.Module):
 
         d0 = self.out_ch_lstm(torch.cat([e0, d1], dim=1))
         out = self.out_conv(torch.cat([d0, d1], dim=1))
-        # b, c, f, t = Y.shape
-        # estEchoPath = Y.reshape(Y.shape[0], 2, self.order, Y.shape[2], Y.shape[3])
-        # out = mix_comp - multiply_orders_(far_comp, estEchoPath, self.order)
-
         y = self.istft(out, t=x.shape[-1])[:, 0]
         # far = self.istft(far_comp, t=x.shape[-1])[:, 0]
 
