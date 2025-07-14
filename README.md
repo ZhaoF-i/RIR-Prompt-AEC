@@ -2,4 +2,4 @@
 
 Room Impulse Response as a Prompt for Acoustic Echo Cancellation
 
-Paper, https://arxiv.org/abs/2505.19480
+
